@@ -29,3 +29,52 @@ export const ButtonPrimary = styled.button `
 
     }
 `;
+
+export const MenuDrawer = styled.div`
+    width: 440px;
+    padding: 25px;
+    background: #ffffff;
+`;
+
+export const OrderTitle = styled.div`
+    font-size: 30px;
+    font-weight: 700;
+    margin: 20px 0;
+`;
+
+export const ButtonOrder = styled.button`
+    color: #7159c1;
+    font-size: 16px;
+    font-weight: 700;
+    width: 100%;
+    text-align: left center;
+    display: flex;
+    border: none; 
+    background: #ffffff;
+    margin: 30px 0 20px 0;
+
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
+export const SumaryItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+`;
+
+export const Total = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    font-weight: bold;
+`;
+
+export const Bottombutton = styled.div`
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    padding: 40px 0 !important;
+`;
