@@ -3,9 +3,9 @@ import styled from 'styled-components';
 export const Container = styled.div `
     display: flex !important;
     background: #7159c1 !important;
-    justify-content: center !important;
+    justify-content: space-between !important;
     align-items: center !important;
-    padding: 40px 0 !important;
+    padding: 40px 15px !important;
     width: 100% !important;
     height: 80px !important;
     position: fixed;
@@ -16,4 +16,17 @@ export const Container = styled.div `
 
 export const Img = styled.img `
     width: 15%;
+`;
+
+export const ArrowBtn = styled.button`
+    background: none;
+    border-radius: 50%;
+    border: transparent;
+    width: 40px;
+    height: 40px;
+
+    &:hover{
+        cursor: pointer;
+        background: #573ea8;
+    }
 `;
