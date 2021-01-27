@@ -14,7 +14,7 @@ import {
     PaymentItem,
 } from './styles';
 
-import { MdHome, MdCreditCard, MdPerson, MdLocalParking } from 'react-icons/md';
+import { MdHome, MdCreditCard, MdPerson, MdCheckCircle, MdLocalParking } from 'react-icons/md';
 import { ImBarcode } from "react-icons/im";
 
 import Drawer from '@material-ui/core/Drawer';
@@ -91,21 +91,21 @@ export default function Footer() {
 
                     <ButtonOrder onClick={handleDialogDados}>
                         <div style={{margin: '0 25px 0 8px'}}><MdPerson size={25} color="#7159c1"/></div>
-                        <div style={{marginTop: '5px'}} className="TextBold">
-                            {(field.nome == '') ? 
+                        <div style={{marginTop: '5px'}} className="TextBold">Dados Pessoais
+                            {/* {(field.nome === '') ? 
                                 <p>Dados Pessoais</p>
                                 : field.nome
-                            }
+                            } */}
                         </div>
                     </ButtonOrder>
                     
                     <ButtonOrder onClick={handleDialogEndereco}>
                         <div style={{margin: '0 25px 0 8px'}}><MdHome size={25} color="#7159c1"/></div>
-                        <div style={{marginTop: '5px'}} className="TextBold">
-                            {(field.endereco == '') ? 
+                        <div style={{marginTop: '5px'}} className="TextBold">Adicionar Endereço
+                            {/* {(field.endereco === '') ? 
                                 <p>Adicionar Endereço</p>
                                 : field.endereco
-                            }
+                            } */}
                         </div>
                     </ButtonOrder>
 
@@ -115,6 +115,7 @@ export default function Footer() {
                         <PaymentItem>
                             <div style={{margin: '0 25px 0 8px'}}><ImBarcode size={25} color="#7159c1"/></div>
                             <div style={{marginTop: '5px'}} className="TextBold">Boleto</div>
+                            {/* {formaPagamento === "boleto" && (<MdCheckCircle size={20} color="#59c179"/>)} */}
                         </PaymentItem>
 
                         <PaymentItem onClick={handleDialogCartao}>
@@ -163,9 +164,10 @@ export default function Footer() {
             </Drawer>
             <Dialog  open={DialogDados} onClose={handleDialogDados}>
                 <div style={{width: "500px"}}>
-                    <DialogTitle>Dados Pessoais</DialogTitle>
-                    <DialogContent>
-                        <form>
+                    <form>
+                        <DialogTitle>Dados Pessoais</DialogTitle>
+                        <DialogContent>
+                            
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -200,14 +202,15 @@ export default function Footer() {
                                 label="Telefone"
                                 fullWidth
                             />
-                        </form>
-                    </DialogContent>
-                    
-                    <DialogActions style={{paddingTop: "30px"}}>
-                        <Button onClick={handleDialogDados} color="primary">
-                            Confirmar
-                        </Button>
-                    </DialogActions>
+                        
+                        </DialogContent>
+                        
+                        <DialogActions style={{paddingTop: "30px"}}>
+                            <Button onClick={handleDialogDados} color="primary">
+                                Confirmar
+                            </Button>
+                        </DialogActions>
+                    </form>
                 </div>
             </Dialog>
 
@@ -316,9 +319,10 @@ export default function Footer() {
             
             <Dialog  open={DialogCartao} onClose={handleDialogCartao}>
                 <div style={{width: "500px"}}>
-                    <DialogTitle>Dados do Cartão</DialogTitle>
-                    <DialogContent>
-                        <form>
+                    <form>
+                        <DialogTitle>Dados do Cartão</DialogTitle>
+                        <DialogContent>
+                            
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -353,17 +357,17 @@ export default function Footer() {
                                 label="CVC"
                                 fullWidth
                             />
-                        </form>
-                    </DialogContent>
-                    
-                    <DialogActions style={{paddingTop: "30px"}}>
-                        <Button onClick={handleDialogCartao} color="primary">
-                            voltar
-                        </Button>
-                        <Button onClick={handleDialogCartao} color="primary">
-                            Confirmar
-                        </Button>
-                    </DialogActions>
+
+                        </DialogContent>
+                        <DialogActions style={{paddingTop: "30px"}}>
+                            <Button onClick={handleDialogCartao} color="primary">
+                                voltar
+                            </Button>
+                            <Button onClick={handleDialogCartao} color="primary">
+                                Confirmar
+                            </Button>
+                        </DialogActions>
+                    </form>
                 </div>
             </Dialog>
         </Container>

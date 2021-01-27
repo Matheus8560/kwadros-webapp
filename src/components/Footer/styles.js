@@ -100,8 +100,17 @@ export const PaymentItem = styled.button`
     border: none; 
     background: #ffffff;
     margin: 15px 0 20px 0;
+    padding: 5px;
+    border-radius: 10px;
 
     &:hover {
         cursor: pointer;
     }
+
+    /* &:focus {
+        background: #59c179;
+        color: #FFF;
+    } */
 `;
+
+
