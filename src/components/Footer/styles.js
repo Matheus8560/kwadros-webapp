@@ -76,5 +76,32 @@ export const Bottombutton = styled.div`
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
-    padding: 40px 0 !important;
+    padding-top: 40px !important;
+`;
+
+export const Payment = styled.div`
+    display: flex;
+    justify-content: space-between;
+`;
+
+export const PaymentTitle = styled.div`
+    font-size: 17px;
+    font-weight: 600;
+    margin: 40px 0 15px;
+`;
+
+export const PaymentItem = styled.button`
+    color: #7159c1;
+    font-size: 16px;
+    font-weight: 700;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    border: none; 
+    background: #ffffff;
+    margin: 15px 0 20px 0;
+
+    &:hover {
+        cursor: pointer;
+    }
 `;

@@ -6,18 +6,24 @@ import {
     MenuDrawer, 
     OrderTitle,
     ButtonOrder,
-    SumaryItem, Total, Bottombutton
+    SumaryItem, 
+    Total, 
+    Bottombutton,
+    Payment,
+    PaymentTitle,
+    PaymentItem,
 } from './styles';
+
+import { MdHome, MdCreditCard, MdPerson, MdLocalParking } from 'react-icons/md';
+import { ImBarcode } from "react-icons/im";
 
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import { MdHome, MdCreditCard, MdPerson } from 'react-icons/md';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import viaCep from '../../services/viaCep';
 
@@ -28,9 +34,11 @@ export default function Footer() {
     const [DialogDados, setDialogDados] = useState(false);
     const [DialogEndereco, setDialogEndereco] = useState(false);
     const [DialogPagamento, setDialogPagamento] = useState(false);
+    const [DialogCartao, setDialogCartao] = useState(false);
     const [field, setField] = useState({
         nome: '',
         email: '',
+        cpf: '',
         telefone: '',
         cep: '',
         endereco: '',
@@ -40,6 +48,7 @@ export default function Footer() {
         bairro: '',
         complemento: '',
         numCard: '',
+        nomeTitular: '',
         validade: '',
         cvc: '',
     });
@@ -62,6 +71,9 @@ export default function Footer() {
     }
     function handleDialogPagamento() {
         setDialogPagamento(!DialogPagamento);
+    }
+    function handleDialogCartao() {
+        setDialogCartao(!DialogCartao)
     }
 
     return(
@@ -96,11 +108,32 @@ export default function Footer() {
                             }
                         </div>
                     </ButtonOrder>
+
+                    <PaymentTitle>Formas de Pagamento</PaymentTitle>
+                    <Payment>
+
+                        <PaymentItem>
+                            <div style={{margin: '0 25px 0 8px'}}><ImBarcode size={25} color="#7159c1"/></div>
+                            <div style={{marginTop: '5px'}} className="TextBold">Boleto</div>
+                        </PaymentItem>
+
+                        <PaymentItem onClick={handleDialogCartao}>
+                            <div style={{margin: '0 25px 0 8px'}}><MdCreditCard size={25} color="#7159c1"/></div>
+                            <div style={{marginTop: '5px'}} className="TextBold">Cartão</div>
+                        </PaymentItem>
+
+                    </Payment>
+
+                    {/* <ButtonOrder>
+                        <div style={{margin: '0 25px 0 8px'}}><MdLocalParking size={25} color="#7159c1"/></div>
+                        <div style={{marginTop: '5px'}} className="TextBold">Pix</div>
+                    </ButtonOrder> */}
+                
                     
-                    <ButtonOrder onClick={handleDialogPagamento}>
+                    {/* <ButtonOrder onClick={handleDialogPagamento}>
                         <div style={{margin: '0 25px 0 8px'}}><MdCreditCard size={25} color="#7159c1"/></div>
                         <div style={{marginTop: '5px'}} className="TextBold">Forma de Pagamento</div>
-                    </ButtonOrder>
+                    </ButtonOrder> */}
 
                     <div className="OrderSumary">
                         <Divider/>
@@ -149,6 +182,14 @@ export default function Footer() {
                                 name="email"
                                 label="Email"
                                 type="email"
+                                fullWidth
+                            />
+                            <TextField
+                                margin="dense"
+                                value={field.cpf}
+                                onChange={handleChange}
+                                name="cpf"
+                                label="CPF"
                                 fullWidth
                             />
                             <TextField
@@ -244,7 +285,36 @@ export default function Footer() {
                 </div>
             </Dialog>
         
-            <Dialog  open={DialogPagamento} onClose={handleDialogPagamento}>
+            {/* <Dialog open={DialogPagamento} onClose={handleDialogPagamento}>
+                <div style={{width: "500px"}}>
+                    <DialogTitle>Formas de pagamento</DialogTitle>
+                    
+                    <DialogContent>
+                        <ButtonOrder>
+                            <div style={{margin: '0 25px 0 8px'}}><MdInsertDriveFile size={25} color="#7159c1"/></div>
+                            <div style={{marginTop: '5px'}} className="TextBold">Boleto</div>
+                        </ButtonOrder>
+
+                        <ButtonOrder onClick={handleDialogCartao}>
+                            <div style={{margin: '0 25px 0 8px'}}><MdCreditCard size={25} color="#7159c1"/></div>
+                            <div style={{marginTop: '5px'}} className="TextBold">Cartão</div>
+                        </ButtonOrder>
+
+                        <ButtonOrder>
+                            <div style={{margin: '0 25px 0 8px'}}><MdLocalParking size={25} color="#7159c1"/></div>
+                            <div style={{marginTop: '5px'}} className="TextBold">Pix</div>
+                        </ButtonOrder>
+                    </DialogContent>
+                    
+                    <DialogActions style={{paddingTop: "30px"}}>
+                        <Button onClick={handleDialogPagamento} color="primary">
+                            Confirmar
+                        </Button>
+                    </DialogActions>
+                </div>
+            </Dialog> */}
+            
+            <Dialog  open={DialogCartao} onClose={handleDialogCartao}>
                 <div style={{width: "500px"}}>
                     <DialogTitle>Dados do Cartão</DialogTitle>
                     <DialogContent>
@@ -256,6 +326,15 @@ export default function Footer() {
                                 onChange={handleChange}
                                 name="NumCard"
                                 label="Numero do cartão"
+                                fullWidth
+                            />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                value={field.nomeTitular}
+                                onChange={handleChange}
+                                name="nomeTitular"
+                                label="Nome do titular"
                                 fullWidth
                             />
                             <TextField
@@ -278,7 +357,10 @@ export default function Footer() {
                     </DialogContent>
                     
                     <DialogActions style={{paddingTop: "30px"}}>
-                        <Button onClick={handleDialogPagamento} color="primary">
+                        <Button onClick={handleDialogCartao} color="primary">
+                            voltar
+                        </Button>
+                        <Button onClick={handleDialogCartao} color="primary">
                             Confirmar
                         </Button>
                     </DialogActions>
