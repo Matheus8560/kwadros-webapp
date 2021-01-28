@@ -12,7 +12,7 @@ const heightActive = {
 }
 
 
-export const ContainerNavFramer = styled.aside `
+export const ContainerNavFramer = styled.div `
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -28,6 +28,12 @@ export const ContainerNavFramer = styled.aside `
     } */
     
     /* border: 1px solid #7159c1; */
+
+    @media(max-width: 950px) {
+        flex-direction: row;
+        width: 100%;
+        padding-right: 0;
+    }
 `;
 
 export const NavFramerItem = styled.div `
@@ -43,6 +49,12 @@ export const NavFramerItem = styled.div `
     border-radius: 10px;
     background: #FFF;
     /* background: #252323; */
+
+    @media(max-width: 950px) {
+        flex-direction: column;
+        margin: 25px 5px
+    }
+    
 `;
 
 export const ImgFramer = styled.img `
@@ -50,7 +62,16 @@ export const ImgFramer = styled.img `
     margin-right: 6%;
     border-top-left-radius: ${props => props.type === 'active' ? '10px' : '0'};
     border-bottom-left-radius: ${props => props.type === 'active' ? '10px' : 0 };
+
+    @media(max-width: 420px) {
+        height: 77px;
+        margin-right: 0;
+        border-radius: 10px
+    }
+
+    
 `;
+
 export const LabelFramer = styled.label `
     font-size: 1rem;
     font-weight: 700;

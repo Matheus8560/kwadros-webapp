@@ -12,10 +12,17 @@ export const Container = styled.div `
     top: 0;
     margin-bottom: 40px;
     border-bottom: 3px solid #7159c1;
+
+    @media(max-width: 800px) {
+        height: 60px !important;
+        padding: 10px 15px !important;
+        margin-bottom: 15px;
+    }
 `;
 
 export const Img = styled.img `
     width: 15%;
+    min-width: 140px;
 `;
 
 export const ArrowBtn = styled.button`

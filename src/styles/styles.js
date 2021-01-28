@@ -18,6 +18,10 @@ export const Content = styled.div `
     border-radius: 4px;
     display: flex;
     background: #f5f3f3;
+
+    @media(max-width: 950px) {
+        flex-direction: column
+    }
 `;
 
 export const ContentDropzone = styled.div `
@@ -30,4 +34,9 @@ export const ContentDropzone = styled.div `
     display: flex;
     flex-direction: column;
     height: 100%;
+
+    @media(max-width: 950px) {
+        width: 100%;
+        padding: 0 20px
+    }
 `;

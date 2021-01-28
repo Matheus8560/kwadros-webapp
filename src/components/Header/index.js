@@ -10,7 +10,7 @@ const Header = () => (
     <Container>
         <ArrowBtn><MdArrowBack size={25} color="#FFFFFF"/></ArrowBtn>
         <Img src={logo} />
-        <div></div>
+        <div style={{width: '40px'}}></div>
     </Container>
 );
 

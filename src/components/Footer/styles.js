@@ -11,6 +11,10 @@ export const Container = styled.div `
     background: #7159c1;
     position: absolute;
     bottom: 0;
+
+    @media(max-width: 800px) {
+        padding: 30px 0 !important;
+    }
 `;
 
 export const ButtonPrimary = styled.button `
@@ -34,6 +38,10 @@ export const MenuDrawer = styled.div`
     width: 440px;
     padding: 25px;
     background: #ffffff;
+
+    @media(max-width: 600px){
+        width: 100%
+    }
 `;
 
 export const OrderTitle = styled.div`
@@ -55,6 +63,14 @@ export const ButtonOrder = styled.button`
 
     &:hover {
         cursor: pointer;
+    }
+`;
+
+export const DialogContainer = styled.div`
+    width: 500px;
+
+    @media(max-width: 550px){
+        width: 250px
     }
 `;
 
