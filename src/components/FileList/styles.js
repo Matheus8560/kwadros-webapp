@@ -79,7 +79,11 @@ export const Preview = styled.div`
     margin-right: 10px;
     
     @media(max-width: 700px) {
-        width: 125px;
-        height: 125px !important;
+        width: 140px;
+        height: 140px !important;
+    } 
+    @media(min-height: 900px) {
+        width: 450px;
+        height: 450px !important;
     }
 `;

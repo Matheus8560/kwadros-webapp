@@ -19,6 +19,12 @@ export const DropContainer  = styled.div.attrs({ className: "dropzone" })`
     ${ props => props.isDragActive && dragActive }
     ${ props => props.isDragReject && dragReject }
 
+    /* @media(max-width: 800px){
+        width: 200px;
+        height: 200px;
+        display: none;
+    } */
+
 `;
 
 const messageColors = {
@@ -34,6 +40,10 @@ export const UploadMessage = styled.p `
     align-items: center;
     padding-bottom: 15px;
     font-weight: 700;
+
+    @media(max-width: 950px){
+        
+    }
 `;
 
 export const IconCam = styled(AiOutlineCamera) `
@@ -47,4 +57,8 @@ export const UploadMessageContainer = styled.div `
     justify-content: center;
     align-items: center;
     padding: 15px 0;
+
+    @media(max-width: 950px){
+        padding: 0;   
+    }
 `;

@@ -63,7 +63,7 @@ export const ImgFramer = styled.img `
     border-top-left-radius: ${props => props.type === 'active' ? '10px' : '0'};
     border-bottom-left-radius: ${props => props.type === 'active' ? '10px' : 0 };
 
-    @media(max-width: 420px) {
+    @media(max-width: 950px) {
         height: 77px;
         margin-right: 0;
         border-radius: 10px

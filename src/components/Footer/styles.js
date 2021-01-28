@@ -9,11 +9,12 @@ export const Container = styled.div `
     width: 100% !important;
     height: 10px !important;
     background: #7159c1;
-    position: absolute;
+    position: fixed;
     bottom: 0;
 
     @media(max-width: 800px) {
         padding: 30px 0 !important;
+        /* position: relative; */
     }
 `;
 
@@ -30,7 +31,10 @@ export const ButtonPrimary = styled.button `
     &:hover {
         cursor: pointer;
         background: #39f974;
+    }
 
+    @media(max-width: 800px) {
+        width:75%
     }
 `;
 

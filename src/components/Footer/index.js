@@ -158,7 +158,7 @@ export default function Footer() {
                     </div>  
                     
                     <Bottombutton>
-                        <ButtonPrimary onClick={handleDrawer} className="btn">Comprar</ButtonPrimary>  
+                        <ButtonPrimary style={{width: '100%'}} onClick={handleDrawer} className="btn">Comprar</ButtonPrimary>  
                     </Bottombutton>
                 </MenuDrawer>
 

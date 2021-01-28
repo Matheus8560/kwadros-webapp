@@ -16,7 +16,8 @@ export const Container = styled.div `
     @media(max-width: 800px) {
         height: 60px !important;
         padding: 10px 15px !important;
-        margin-bottom: 15px;
+        margin-bottom: 0px;
+        /* position: relative; */
     }
 `;
 
