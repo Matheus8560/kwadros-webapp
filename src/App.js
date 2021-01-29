@@ -5,6 +5,9 @@ import filesize from 'filesize';
 import GlobalStyle from './styles/global';
 import { Container, Content, ContentDropzone } from './styles/styles';
 
+import Grid from '@material-ui/core/Grid';
+
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Upload from './components/Upload';
@@ -129,6 +132,7 @@ export default function App(){
         <Container>
             <Header />
             <Content>
+
                 <ContentDropzone>
                     <Upload onUpload={e => handleUploads(e)} />
                     <FileList files={uploadFiles} onDelete={handleDelete} />

@@ -77,4 +77,13 @@ export const Preview = styled.div`
     background-size: cover;
     background-position: 50% 50%;
     margin-right: 10px;
+    
+    @media(max-width: 700px) {
+        width: 140px;
+        height: 140px !important;
+    } 
+    @media(min-height: 900px) {
+        width: 450px;
+        height: 450px !important;
+    }
 `;

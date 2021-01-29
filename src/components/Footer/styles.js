@@ -9,8 +9,13 @@ export const Container = styled.div `
     width: 100% !important;
     height: 10px !important;
     background: #7159c1;
-    position: absolute;
+    position: fixed;
     bottom: 0;
+
+    @media(max-width: 800px) {
+        padding: 30px 0 !important;
+        /* position: relative; */
+    }
 `;
 
 export const ButtonPrimary = styled.button `
@@ -26,7 +31,10 @@ export const ButtonPrimary = styled.button `
     &:hover {
         cursor: pointer;
         background: #39f974;
+    }
 
+    @media(max-width: 800px) {
+        width:75%
     }
 `;
 
@@ -34,6 +42,10 @@ export const MenuDrawer = styled.div`
     width: 440px;
     padding: 25px;
     background: #ffffff;
+
+    @media(max-width: 600px){
+        width: 100%
+    }
 `;
 
 export const OrderTitle = styled.div`
@@ -55,6 +67,14 @@ export const ButtonOrder = styled.button`
 
     &:hover {
         cursor: pointer;
+    }
+`;
+
+export const DialogContainer = styled.div`
+    width: 500px;
+
+    @media(max-width: 550px){
+        width: 250px
     }
 `;
 

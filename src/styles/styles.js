@@ -7,6 +7,7 @@ export const Container = styled.div `
     justify-content: center;
     align-items: center;
     width: 100%auto;
+    background: #f5f3f3;
 `;
 
 export const Content = styled.div `
@@ -18,6 +19,19 @@ export const Content = styled.div `
     border-radius: 4px;
     display: flex;
     background: #f5f3f3;
+    @media(max-width: 950px) {
+        height: 80%;
+        flex-direction: column;
+        margin: 0;
+    }
+
+    @media(max-height: 550px) {
+        margin-top: 20px;
+    }
+/* 
+     @media(max-height: 740px) {
+        margin: 190px 0;
+    } */
 `;
 
 export const ContentDropzone = styled.div `
@@ -29,5 +43,10 @@ export const ContentDropzone = styled.div `
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 90%;
+
+    @media(max-width: 950px) {
+        width: 100%;
+        padding: 0 20px;
+    }
 `;
