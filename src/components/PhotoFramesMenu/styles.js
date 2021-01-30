@@ -52,9 +52,10 @@ export const NavFramerItem = styled.div `
 
     @media(max-width: 950px) {
         flex-direction: column;
-        margin: 25px 5px
-    }
-    
+        margin: 0.5%;
+        img { width: 100%}
+        
+    }    
 `;
 
 export const ImgFramer = styled.img `

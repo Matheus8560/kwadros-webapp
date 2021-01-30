@@ -19,8 +19,8 @@ export const Content = styled.div `
     border-radius: 4px;
     display: flex;
     background: #f5f3f3;
-
     @media(max-width: 950px) {
+        height: 80%;
         flex-direction: column;
         margin: 0;
     }
@@ -43,7 +43,7 @@ export const ContentDropzone = styled.div `
     border-radius: 4px;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 90%;
 
     @media(max-width: 950px) {
         width: 100%;
