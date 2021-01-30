@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Grid from '@material-ui/core/Grid';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 
 import GlobalStyle from './styles/global';
 import { Container, Content, ContentDropzone } from './styles/styles';
-
-import Grid from '@material-ui/core/Grid';
-
 
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -132,12 +130,10 @@ export default function App(){
         <Container>
             <Header />
             <Content>
-
                 <ContentDropzone>
                     <Upload onUpload={e => handleUploads(e)} />
                     <FileList files={uploadFiles} onDelete={handleDelete} />
                 </ContentDropzone>
-                
                 <PhotoFramesMenu />
             </Content>
             <Footer />
