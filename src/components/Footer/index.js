@@ -1,4 +1,15 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import Drawer from '@material-ui/core/Drawer';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { MdHome, MdCreditCard, MdPerson, MdCheckCircle, MdLocalParking } from 'react-icons/md';
+import { ImBarcode } from "react-icons/im";
 
 import { 
     Container, 
@@ -15,22 +26,13 @@ import {
     DialogContainer
 } from './styles';
 
-import { MdHome, MdCreditCard, MdPerson, MdCheckCircle, MdLocalParking } from 'react-icons/md';
-import { ImBarcode } from "react-icons/im";
 
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import viaCep from '../../services/viaCep';
+import { Notifications } from '../Notifications';
 
 
 export default function Footer() {
-
+    const cart = useSelector(state => state.cart.items);
     const [drawerPedido, setDrawerPedido] = useState(false);
     const [DialogDados, setDialogDados] = useState(false);
     const [DialogEndereco, setDialogEndereco] = useState(false);
@@ -140,25 +142,27 @@ export default function Footer() {
                     <div className="OrderSumary">
                         <Divider/>
                         <SumaryItem>
-                            <div className="ItemTitle">3 Quadros por R$??,??</div>
-                            <div className="ItemValue">R$??,??</div>
+                            <div className="ItemTitle">{cart.kit_name} - {cart.kit_quantity} Quadros</div>
+                            <div className="ItemValue">R$ {parseFloat(cart.kit_price).toFixed(2)}</div>
                         </SumaryItem>
-                        <SumaryItem>
-                            <div className="ItemTitle">Mais 1 quadro</div>
-                            <div className="ItemValue">R$??,??</div>
-                        </SumaryItem>
+                        {cart.quantity > 0 && (
+                            <SumaryItem>
+                                <div className="ItemTitle">Mais {cart.quantity} Quadro{cart.quantity > 1 && 's'}</div>
+                                <div className="ItemValue">R$ {parseFloat(cart.price_unity * cart.quantity).toFixed(2)}</div>
+                            </SumaryItem>
+                        )}
                         <SumaryItem>
                             <div className="ItemTitle">Frete</div>
-                            <div className="ItemValue">R$??,??</div>
+                            <div className="ItemValue">Grátis</div>
                         </SumaryItem>
                         <Total>
                             <div className="TotalTitle">Total</div>
-                            <div className="TotalValue">R$??,??</div>
+                            <div className="TotalValue">R$ {(cart.price_unity * cart.quantity + cart.kit_price).toFixed(2)}</div>
                         </Total>
                     </div>  
                     
                     <Bottombutton>
-                        <ButtonPrimary style={{width: '100%'}} onClick={handleDrawer} className="btn">Comprar</ButtonPrimary>  
+                        <ButtonPrimary style={{width: '100%'}} onClick={() => Notifications('warning', 'Em Desenvolvimento')} className="btn">Comprar</ButtonPrimary>  
                     </Bottombutton>
                 </MenuDrawer>
 

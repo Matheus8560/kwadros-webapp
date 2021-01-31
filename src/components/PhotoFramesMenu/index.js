@@ -1,36 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { ContainerNavFramer, NavFramerItem, ImgFramer, LabelFramer } from './styles';
+import { addProductToCartRequest } from '../../store/modules/cart/actions';
 
-import Grid from '@material-ui/core/Grid';
+import { ContainerNavFramer, NavFramerItem, ImgFramer, LabelFramer } from './styles';;
 
+export default function PhotoFramesMenu({ frames }) {
+    const dispatch = useDispatch();
+    const cart = useSelector(state => state.cart.items);
+    const [selectedFrame, setSelectedFrame] = useState('Moldura Classic');
 
-const PhotoFramesMenu = () => (
+    const handleFrame = (frame) =>  {
+        setSelectedFrame(frame);
 
-    <ContainerNavFramer>
+        const frameFilter = frames.find(index => index.name.includes(frame));
+        const objFrameFilter = { ...frameFilter, quantity: cart.quantity}
+        dispatch(addProductToCartRequest(objFrameFilter))
     
-        <NavFramerItem type="success">
-            <ImgFramer type="active" src="https://site-project.netlify.app/static/media/classic.9c363431.png"/>
-            <LabelFramer type="active">Clássica</LabelFramer>
-        </NavFramerItem>
+    }
 
-        <NavFramerItem>
-            <ImgFramer src="https://site-project.netlify.app/static/media/classic.9c363431.png"/>
-            <LabelFramer>Clássica</LabelFramer>
-        </NavFramerItem>
+    return(
+        <ContainerNavFramer>
+            {frames.length > 0 && frames.map(index => (
+                <NavFramerItem key={index.id} type={selectedFrame === index.name && "success"} onClick={ () => handleFrame(index.name) }>
+                    <ImgFramer type={selectedFrame === index.name && "active"} src={index.image}/>
+                    <LabelFramer type={selectedFrame === index.name && "active"}>{ index.name }</LabelFramer>
+                </NavFramerItem>
+            ))}
+      
+        </ContainerNavFramer>
+    )
 
-        <NavFramerItem>
-            <ImgFramer src="https://site-project.netlify.app/static/media/classic.9c363431.png"/>
-            <LabelFramer>Clássica</LabelFramer>
-        </NavFramerItem>
-
-        <NavFramerItem>
-            <ImgFramer src="https://site-project.netlify.app/static/media/classic.9c363431.png"/>
-            <LabelFramer>Clássica</LabelFramer>
-        </NavFramerItem>
-        
-    </ContainerNavFramer>
-
-)
-
-export default PhotoFramesMenu;
+}

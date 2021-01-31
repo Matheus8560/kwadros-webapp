@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
+import { useSelector, useDispatch } from 'react-redux';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
+
+import { addProductToCartRequest } from './store/modules/cart/actions';
 
 import GlobalStyle from './styles/global';
 import { Container, Content, ContentDropzone } from './styles/styles';
@@ -15,12 +17,30 @@ import PhotoFramesMenu from './components/PhotoFramesMenu';
 import api from './services/api';
 
 export default function App(){
+    const dispatch = useDispatch();
+    const cart = useSelector(state => state.cart.items);
+
+    console.log(cart)
     const [uploadFiles, setUploadFiles] = useState([]);
+    const [frames, setFrames] = useState([]);
 
     useEffect(() => {
-        loadUploadFiles()
+        loadFrames();
+        
     }, []);
 
+    async function loadFrames(){
+        try {
+            const response = await api.get('/frames');
+
+            setFrames(response.data);
+            dispatch(addProductToCartRequest(response.data[0]));
+        } catch(err){
+            console.log('algo de errado não deu certo')
+        }
+    }
+
+    // Carrega fotos do banco*****
     async function loadUploadFiles(){
         try {
             const response = await api.get('/uploads');
@@ -47,6 +67,7 @@ export default function App(){
         }
     }
 
+    // Envia foto pra esteira
     function handleUploads(files){
         const data = files.map(file => ({
             file, 
@@ -62,9 +83,24 @@ export default function App(){
 
         setUploadFiles(uploadFiles.concat(data));
         
-        data.map(index => processUpload(index));
+        if(uploadFiles.concat(data).length > cart.kit_quantity){
+           const quantity = uploadFiles.concat(data).length - cart.kit_quantity;
+
+           dispatch(addProductToCartRequest({
+               ...cart,
+               quantity
+           }))
+        } else {
+            dispatch(addProductToCartRequest({
+                ...cart,
+                quantity: 0
+            }))
+        }
+        // Envia as fotots pro servidor
+        // data.map(index => processUpload(index));
     }
 
+    // ENVIA FOTO AO SERVIDOR
     async function processUpload(files){       
         const data = new FormData();
 
@@ -114,16 +150,41 @@ export default function App(){
         
     }
 
-    async function handleDelete(id){
-        try {
-            await api.delete(`/uploads/${id}`);
-            
-            let newArr;
-            setUploadFiles((state) =>  newArr = state.filter(file => file.id !== id) );
-            setUploadFiles(newArr);
-        } catch(err){
-            console.log(err.response.data.error)
-        }
+    // Remove Foto da Esteira
+    async function handleDelete(id, product_id){
+
+        let newArr;
+
+        setUploadFiles((state) =>  newArr = state.filter(file => file.id !== id) );
+        setUploadFiles(newArr);
+        
+        // const newCart = cart.filter(index => index.id !== product_id);
+
+        if(newArr.length > cart.kit_quantity){
+            const quantity = newArr.length - cart.kit_quantity;
+ 
+            dispatch(addProductToCartRequest({
+                ...cart,
+                quantity
+            }))
+         } else {
+            dispatch(addProductToCartRequest({
+                ...cart,
+                quantity: 0
+            }))
+         }
+        
+        // //atualizar pedido tb 
+        // if(newArr.length > 2){
+        //     const quantity = newArr.length - 2;
+ 
+        //     dispatch(addProductToCartRequest({
+        //         ...newCart,
+        //         quantity
+        //     }))
+        // } else {
+        //     dispatch(addProductToCartRequest(newCart))
+        // }
     }
 
     return (
@@ -132,9 +193,9 @@ export default function App(){
             <Content>
                 <ContentDropzone>
                     <Upload onUpload={e => handleUploads(e)} />
-                    <FileList files={uploadFiles} onDelete={handleDelete} />
+                    <FileList files={uploadFiles} frame={cart.name} onDelete={handleDelete} />
                 </ContentDropzone>
-                <PhotoFramesMenu />
+                <PhotoFramesMenu frames={frames} />
             </Content>
             <Footer />
             <GlobalStyle />

@@ -8,7 +8,7 @@ import { MdArrowBack } from 'react-icons/md';
 
 const Header = () => (
     <Container>
-        <ArrowBtn><MdArrowBack size={25} color="#FFFFFF"/></ArrowBtn>
+        <ArrowBtn onClick={() => window.location.href="https://kwadros.com"}><MdArrowBack size={25} color="#FFFFFF"/></ArrowBtn>
         <Img src={logo} />
         <div style={{width: '40px'}}></div>
     </Container>
