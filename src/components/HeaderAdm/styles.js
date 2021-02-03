@@ -5,6 +5,11 @@ const itemActive = {
     active: '#59C179',
 }
 
+const itemActiveDrawer = {
+    default: 'black',
+    active: '#59C179',
+}
+
 const borderActive = {
     default: 'none',
     active: '1px solid #59C179',
@@ -53,6 +58,20 @@ export const MenuItens = styled.div`
     @media(max-width: 580px){
         display: none;
     }
+`;
+
+export const MenuDrawerBtn = styled.button`
+    cursor: pointer;
+    border: none;
+    padding: 1.5rem 5rem;
+    background: #FFFFFF;
+`;
+
+export const MenuMobileItens = styled.p`
+    color: ${props => itemActiveDrawer[props.type || 'default']};
+    border-bottom: ${props => borderActive[props.type || 'default']};
+    font-size: 18px;
+    font-weight:bold;
 `;
 
 export const MenuMobile = styled.button`
