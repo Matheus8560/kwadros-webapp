@@ -22,3 +22,21 @@ export function addProductToCartFailure(productId){
         }
     }
 }
+
+export function addUploadToCart(upload){
+    return {
+        type: 'ADD_UPLOAD_TO_CART',
+        payload: {
+            upload,
+        }
+    }
+}
+export function addLoadingCart(loading){
+    return {
+        type: 'ADD_LOADING_CART',
+        payload: {
+            loading,
+        }
+    }
+}
+

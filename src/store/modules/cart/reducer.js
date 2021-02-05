@@ -8,7 +8,9 @@ const INITIAL_STATE = {
         // kit_quantity: 0,
         // price_unity: 0
         // quantity: 0
-    }
+    },
+    uploads: [],
+    loading: true
 }
 
 const cart = (state = INITIAL_STATE, action) => {
@@ -24,6 +26,26 @@ const cart = (state = INITIAL_STATE, action) => {
             }
         }
         
+        case ActionTypes.addUploadToCart: {
+            const { upload } = action.payload;
+
+            return {
+                ...state,
+                uploads: [
+                    ...upload,
+                ]
+            }
+        }
+
+        case ActionTypes.addLoadingCart: {
+            const { loading } = action.payload;
+
+            return {
+                ...state,
+                loading,
+            }
+        }
+
         default: {
             return state;
         }

@@ -3,11 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { uniqueId } from 'lodash';
 import filesize from 'filesize';
 
-import { addProductToCartRequest } from './store/modules/cart/actions';
+import { addProductToCartRequest, addUploadToCart, addLoadingCart } from './store/modules/cart/actions';
 
 import GlobalStyle from './styles/global';
 import { Container, Content, ContentDropzone } from './styles/styles';
 
+import Loader from './components/Loader';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Upload from './components/Upload';
@@ -19,13 +20,14 @@ import api from './services/api';
 export default function App(){
     const dispatch = useDispatch();
     const cart = useSelector(state => state.cart.items);
+    const loading = useSelector(state => state.cart.loading);
 
-    console.log(cart)
     const [uploadFiles, setUploadFiles] = useState([]);
     const [frames, setFrames] = useState([]);
 
     useEffect(() => {
         loadFrames();
+        dispatch(addLoadingCart(false));
         
     }, []);
 
@@ -96,59 +98,13 @@ export default function App(){
                 quantity: 0
             }))
         }
+
+        // Salva no redu
+        dispatch(addUploadToCart(data))
         // Envia as fotots pro servidor
         // data.map(index => processUpload(index));
     }
 
-    // ENVIA FOTO AO SERVIDOR
-    async function processUpload(files){       
-        const data = new FormData();
-
-        data.append('file', files.file);
-
-        try {
-            const response = await api.post('/uploads', data, {
-                onUploadProgress: e => {
-                    const progress = parseInt(Math.round(e.loaded * 100 / e.total));
-    
-                    setUploadFiles((state) =>  {
-                        let arr = [...state];
-                        state.map((index, key) => {
-                            if(index.id == files.id){
-                                arr[key].progress = progress;
-                            }
-                        })
-                        return arr;
-                    }); 
-    
-                }
-            });
-        
-            setUploadFiles((state) =>  {
-                let arr = [...state];
-                state.map((index, key) => {
-                    if(index.id == files.id){
-                        arr[key].url = response.data.url;
-                        arr[key].id = response.data._id;
-                        arr[key].uploaded = true;
-                    }
-                })
-                return arr;
-            });
-           
-
-        } catch(err){
-            setUploadFiles((state) =>  {
-                let arr = [...state];
-                state.map((index, key) => {
-                    if(index.id == files.id) arr[key].error = true;
-                })
-                return arr;
-            });
-            
-        }
-        
-    }
 
     // Remove Foto da Esteira
     async function handleDelete(id, product_id){
@@ -187,6 +143,7 @@ export default function App(){
         // }
     }
 
+    if(loading) return <Loader />
     return (
         <Container>
             <Header />

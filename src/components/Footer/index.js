@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -10,6 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { MdHome, MdCreditCard, MdPerson, MdCheckCircle, MdLocalParking } from 'react-icons/md';
 import { ImBarcode } from "react-icons/im";
+import pagarme from 'pagarme';
 
 import { 
     Container, 
@@ -26,13 +27,20 @@ import {
     DialogContainer
 } from './styles';
 
+import { addLoadingCart } from '../../store/modules/cart/actions';
 
+import api from '../../services/api';
 import viaCep from '../../services/viaCep';
 import { Notifications } from '../Notifications';
 
+require('dotenv').config();
 
 export default function Footer() {
+    const dispatch = useDispatch();
+
     const cart = useSelector(state => state.cart.items);
+    const uploads = useSelector(state => state.cart.uploads);
+
     const [drawerPedido, setDrawerPedido] = useState(false);
     const [DialogDados, setDialogDados] = useState(false);
     const [DialogEndereco, setDialogEndereco] = useState(false);
@@ -51,10 +59,10 @@ export default function Footer() {
         bairro: '',
         complemento: '',
         numCard: '',
-        nomeTitular: '',
         validade: '',
         cvc: '',
     });
+    const [method, setMethod] = useState('');
 
     const handleChange = (event) => {
         const target = event.target;
@@ -76,9 +84,220 @@ export default function Footer() {
         setDialogPagamento(!DialogPagamento);
     }
     function handleDialogCartao() {
-        setDialogCartao(!DialogCartao)
+        setMethod('CARD');
+        setDialogCartao(!DialogCartao);
     }
 
+    // REALIZA O PAGAMENTO
+    async function handleSubmit(){
+        dispatch(addLoadingCart(true));
+
+        if(uploads.length >= 3){
+            switch (method) {
+                case 'CARD':
+                    // Fazer Validação aqui
+    
+                    // DEU CERTO VALIDAÇÃO:
+                    handleCard();
+                    dispatch(addLoadingCart(false));
+                    break;
+                case 'TICKET':
+                    // Fazer Validação aqui
+                    // DEU CERTO VALIDAÇÃO:
+                    handleTicket();
+                    dispatch(addLoadingCart(false));
+                    break;
+                default:
+                    Notifications('warning', 'Selecione o meio de pagamento: Boleto ou Cartão')
+                    dispatch(addLoadingCart(false));
+                    break;
+            }
+            
+        } else {
+            Notifications('warning', 'Você precisa selecionar no minimo 3 imagens');
+            dispatch(addLoadingCart(false));
+        }
+        
+    }
+
+    // ENVIA FOTO AO SERVIDOR
+    async function processUpload(files){       
+        const data = new FormData();
+
+        data.append('file', files.file);
+        data.append('framer', files.framer);
+        data.append('status', files.status);
+        data.append('order_id', files.order_id);
+
+        try {
+            const response = await api.post('/uploads', data);
+
+           console.log(response)
+
+        } catch(err){
+           console.log(err.message)
+            
+        }
+        
+    }
+
+    const isEmpty = obj => {
+        let state = false;
+        for(var prop in obj) {
+            if(obj[prop] == '' || obj[prop] == [] || obj[prop] == {})  state = true;
+        }
+        return state;
+    }
+    // CARTÃO DE CRÉDITO: PAGARME
+    async function handleCard(){
+        if(!isEmpty({ ...field, complemento: '*'})){
+            const data = { ...field };
+
+            try {
+                const client = await pagarme.client.connect({
+                    encryption_key: process.env.REACT_APP_PAGARME_ENCRYPTION_KEY
+                });
+        
+                const card_hash = await client.security.encrypt({
+                    card_holder_name: data.nome,
+                    card_number: data.numCard,
+                    card_expiration_date: data.validade,
+                    card_cvv: data.cvc,
+                });
+        
+                delete data.numCard;
+                delete data.validade;
+                delete data.cvc;
+        
+                setField(data);
+
+                const response = await api.post('/payments/cards', { ...data, card_hash});
+                
+            // Faz o Upload
+            uploads.forEach(files => processUpload({
+                    file: files.file, 
+                    order_id: response.data.order_id,
+                    framer: cart.kit_name, 
+                    status: 'waiting_payment'
+                }));
+
+                // Pedido na YAMPI
+                await api.post('/orders', {
+                    ...cart,
+                    status: 'waiting_payment',
+                    address: {
+                        street: field.endereco,
+                        number: field.numero,
+                        neighborhood: field.bairro,
+                        complement: field.complemento,
+                        reference: field.nome,
+                        zipcode: field.cep,
+                        city: field.cidade,
+                        uf: field.estado,
+                    },
+                    installments: 1,
+                    method: 9,
+                    name: field.nome,
+                    email: field.email,
+                    phone: field.telefone,
+                    cpf: String(field.cpf),
+                    // ticket_code: response.data.bank_slip.digitable_line,
+                    days_delivery: 22,
+                    value_total: parseFloat(cart.price_unity * cart.quantity + cart.kit_price),
+                    order_id: response.data.order_id,
+
+                });
+            
+                Notifications('success', 'Seu pedido foi realizado com sucesso.');
+            } catch(err){
+                Notifications('error', 'Erro ao realizar pedido');
+            }
+        } else {
+            Notifications('error', 'Por favor, preencha todos os dados solicitados.');
+        }
+        
+    }
+
+    // BOLETO BANCÁRIO: PAGHIPER
+    async function handleTicket(){
+        dispatch(addLoadingCart(true));
+        const data = { ...field };
+
+        delete data.numCard;
+        delete data.validade;
+        delete data.cvc;
+
+        setField(data);
+
+        if(!isEmpty({ ...data, complemento: '*'})){
+            try {
+                const response = await api.post('/payments/tickets', {
+                    name: field.nome,
+                    email: field.email,
+                    cpf: field.cpf,
+                    ...cart,
+                    address: {
+                        street: field.endereco,
+                        number: field.numero,
+                        neighborhood: field.bairro,
+                        complement: field.complemento,
+                        reference: field.name,
+                        zipcode: field.cep,
+                        city: field.cidade,
+                        uf: field.estado,
+                    },
+                    phone: field.telefone,
+                });
+                
+                // Faz o Upload
+                uploads.forEach(files => processUpload({
+                    file: files.file, 
+                    order_id: response.data.order_id,
+                    framer: cart.kit_name, 
+                    status: 'waiting_payment'
+                }))
+            
+
+                // Pedido na YAMPI
+                await api.post('/orders', {
+                    ...cart,
+                    status: 'waiting_payment',
+                    address: {
+                        street: field.endereco,
+                        number: field.numero,
+                        neighborhood: field.bairro,
+                        complement: field.complemento,
+                        reference: field.nome,
+                        zipcode: field.cep,
+                        city: field.cidade,
+                        uf: field.estado,
+                    },
+                    installments: 1,
+                    method: 9,
+                    name: field.nome,
+                    email: field.email,
+                    phone: field.telefone,
+                    cpf: String(field.cpf),
+                    // ticket_code: response.data.bank_slip.digitable_line,
+                    days_delivery: 22,
+                    value_total: parseFloat(cart.price_unity * cart.quantity + cart.kit_price),
+                    order_id: response.data.order_id,
+
+                });
+                
+                // Redireciona pro boleto
+            
+                window.location.href = response.data.bank_slip.url_slip_pdf;
+                
+            } catch (err){
+                Notifications('error', 'Erro ao realizar pedido');
+                dispatch(addLoadingCart(false));
+            }
+        } else {
+            Notifications('error', 'Por favor, preencha todos os dados solicitados.');
+            dispatch(addLoadingCart(false));
+        }
+    }
     return(
         <Container>
             <ButtonPrimary onClick={handleDrawer} className="btn">Fechar Pedido</ButtonPrimary>
@@ -94,50 +313,33 @@ export default function Footer() {
 
                     <ButtonOrder onClick={handleDialogDados}>
                         <div style={{margin: '0 25px 0 8px'}}><MdPerson size={25} color="#7159c1"/></div>
-                        <div style={{marginTop: '5px'}} className="TextBold">Dados Pessoais
-                            {/* {(field.nome === '') ? 
-                                <p>Dados Pessoais</p>
-                                : field.nome
-                            } */}
-                        </div>
+                        <div style={{marginTop: '5px'}} className="TextBold">Adicionar Dados Pessoais</div>
                     </ButtonOrder>
                     
                     <ButtonOrder onClick={handleDialogEndereco}>
                         <div style={{margin: '0 25px 0 8px'}}><MdHome size={25} color="#7159c1"/></div>
-                        <div style={{marginTop: '5px'}} className="TextBold">Adicionar Endereço
-                            {/* {(field.endereco === '') ? 
-                                <p>Adicionar Endereço</p>
-                                : field.endereco
-                            } */}
-                        </div>
+                        <div style={{marginTop: '5px'}} className="TextBold">Adicionar Endereço</div>
                     </ButtonOrder>
 
                     <PaymentTitle>Formas de Pagamento</PaymentTitle>
                     <Payment>
 
-                        <PaymentItem>
+                        <PaymentItem onClick={() => setMethod('TICKET')}>
                             <div style={{margin: '0 25px 0 8px'}}><ImBarcode size={25} color="#7159c1"/></div>
                             <div style={{marginTop: '5px'}} className="TextBold">Boleto</div>
-                            {/* {formaPagamento === "boleto" && (<MdCheckCircle size={20} color="#59c179"/>)} */}
+                            {method === "TICKET" && (<MdCheckCircle size={20} color="#59c179" style={{alignSelf: 'flex-end', marginLeft: '4%' }}/>)}
                         </PaymentItem>
 
-                        <PaymentItem onClick={handleDialogCartao}>
+                        <PaymentItem onClick={() => { 
+                             setMethod('CARD');
+                             setDialogCartao(!DialogCartao);
+                        }}>
                             <div style={{margin: '0 25px 0 8px'}}><MdCreditCard size={25} color="#7159c1"/></div>
                             <div style={{marginTop: '5px'}} className="TextBold">Cartão</div>
+                            {method === "CARD" && (<MdCheckCircle size={20} color="#59c179" style={{alignSelf: 'flex-end', marginLeft: '4%' }}/>)}
                         </PaymentItem>
 
                     </Payment>
-
-                    {/* <ButtonOrder>
-                        <div style={{margin: '0 25px 0 8px'}}><MdLocalParking size={25} color="#7159c1"/></div>
-                        <div style={{marginTop: '5px'}} className="TextBold">Pix</div>
-                    </ButtonOrder> */}
-                
-                    
-                    {/* <ButtonOrder onClick={handleDialogPagamento}>
-                        <div style={{margin: '0 25px 0 8px'}}><MdCreditCard size={25} color="#7159c1"/></div>
-                        <div style={{marginTop: '5px'}} className="TextBold">Forma de Pagamento</div>
-                    </ButtonOrder> */}
 
                     <div className="OrderSumary">
                         <Divider/>
@@ -162,7 +364,7 @@ export default function Footer() {
                     </div>  
                     
                     <Bottombutton>
-                        <ButtonPrimary style={{width: '100%'}} onClick={() => Notifications('warning', 'Em Desenvolvimento')} className="btn">Comprar</ButtonPrimary>  
+                        <ButtonPrimary style={{width: '100%'}} onClick={() => handleSubmit()} className="btn">Comprar</ButtonPrimary>  
                     </Bottombutton>
                 </MenuDrawer>
 
@@ -292,35 +494,6 @@ export default function Footer() {
                     </form>
                 </DialogContainer>
             </Dialog>
-        
-            {/* <Dialog open={DialogPagamento} onClose={handleDialogPagamento}>
-                <div style={{width: "500px"}}>
-                    <DialogTitle>Formas de pagamento</DialogTitle>
-                    
-                    <DialogContent>
-                        <ButtonOrder>
-                            <div style={{margin: '0 25px 0 8px'}}><MdInsertDriveFile size={25} color="#7159c1"/></div>
-                            <div style={{marginTop: '5px'}} className="TextBold">Boleto</div>
-                        </ButtonOrder>
-
-                        <ButtonOrder onClick={handleDialogCartao}>
-                            <div style={{margin: '0 25px 0 8px'}}><MdCreditCard size={25} color="#7159c1"/></div>
-                            <div style={{marginTop: '5px'}} className="TextBold">Cartão</div>
-                        </ButtonOrder>
-
-                        <ButtonOrder>
-                            <div style={{margin: '0 25px 0 8px'}}><MdLocalParking size={25} color="#7159c1"/></div>
-                            <div style={{marginTop: '5px'}} className="TextBold">Pix</div>
-                        </ButtonOrder>
-                    </DialogContent>
-                    
-                    <DialogActions style={{paddingTop: "30px"}}>
-                        <Button onClick={handleDialogPagamento} color="primary">
-                            Confirmar
-                        </Button>
-                    </DialogActions>
-                </div>
-            </Dialog> */}
             
             <Dialog  open={DialogCartao} onClose={handleDialogCartao}>
                 <DialogContainer>
