@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 
-import { Container, Img, TopMenu, MenuItens, MenuMobile} from './styles';
+import { Container, Img, TopMenu, MenuItens, MenuMobile, MenuDrawerBtn, MenuMobileItens} from './styles';
 
 import logo from '../../assets/logo-white.png';
 
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Drawer from '@material-ui/core/Drawer';
 
 import { AiOutlineMenu } from "react-icons/ai";
 
@@ -42,23 +41,28 @@ export default function HeaderAdm() {
                     <AiOutlineMenu size={25} color="#FFFFFF"/>
                 </MenuMobile>
 
-                <Menu
-                    anchorEl={mobileMenu}
-                    keepMounted
-                    open={Boolean(mobileMenu)}
+                <Drawer 
+                    variant="temporary"
+                    anchor="right"
+                    open={mobileMenu}
                     onClose={handleMobileMenu}
                 >
-                    <MenuItem onClick={handleMobileMenu}>
-                        Usuario
-                    </MenuItem>
-                    <MenuItem onClick={handleMobileMenu}>
-                        Pedidos
-                    </MenuItem>
-                    <MenuItem onClick={handleMobileMenu}>
-                        Sair
-                    </MenuItem>
-                </Menu>
 
+                    
+                        <MenuDrawerBtn onClick={ e => handleMenu("usuario") }>
+                            <MenuMobileItens type={selected === 'usuario' ? "active" : ""}> Usuario </MenuMobileItens>
+                        </MenuDrawerBtn>
+
+                        <MenuDrawerBtn onClick={ e => handleMenu("pedidos") }>
+                            <MenuMobileItens type={selected === 'pedidos' ? "active" : ""}> Pedidos </MenuMobileItens>
+                        </MenuDrawerBtn>
+
+                        <MenuDrawerBtn onClick={ e => handleMenu("sair") }>
+                            <MenuMobileItens type={selected === 'sair' ? "active" : ""}> Sair</MenuMobileItens>
+                        </MenuDrawerBtn>
+                    
+
+                </Drawer>
 
             </TopMenu>
         </Container>
