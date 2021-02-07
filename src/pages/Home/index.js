@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect  } from 'react';
 import ReactDatatable from '@ashvin27/react-datatable';
-import { FaRegTrashAlt, FaPlus, FaRegEye } from 'react-icons/fa';
+import { FaPencilAlt, FaRegTrashAlt, FaPlus, FaRegEye } from 'react-icons/fa';
 
 import GlobalStyle from '../../styles/global';
 import { Container, Content } from './styles';
@@ -108,17 +108,7 @@ export default function Home({ history }){
     }, []);
 
     async function loadClients(){
-        try {
-            const response = await API.get('/clients');
-
-            response.data.map(index => index.phone = phoneMask(String(index.phone)))
-            
-            setRecords(response.data);
-
-        } catch(error){
-            Notifications('error', error.response.data.error);
-            setLoading(false);
-        } 
+        console.log('top')
     }
 
     const editRecord = record => {
@@ -135,12 +125,12 @@ export default function Home({ history }){
 
             loadClients();
             
-            Notifications('success', 'Cliente Deletado com Sucesso!');
+            // Notifications('success', 'Cliente Deletado com Sucesso!');
             
             setLoading(false)
 
         } catch(error){
-            Notifications('error', error.response.data.error);
+            // Notifications('error', error.response.data.error);
             setLoading(false);
         }
         
