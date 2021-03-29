@@ -173,8 +173,8 @@ export default function Footer() {
 
                 const response = await api.post('/payments/cards', { ...data, card_hash});
                 
-            // Faz o Upload
-            uploads.forEach(files => processUpload({
+                // Faz o Upload
+                uploads.forEach(files => processUpload({
                     file: files.file, 
                     order_id: response.data.order_id,
                     framer: cart.kit_name, 
@@ -344,22 +344,16 @@ export default function Footer() {
                     <div className="OrderSumary">
                         <Divider/>
                         <SumaryItem>
-                            <div className="ItemTitle">{cart.kit_name} - {cart.kit_quantity} Quadros</div>
-                            <div className="ItemValue">R$ {parseFloat(cart.kit_price).toFixed(2)}</div>
+                            <div className="ItemTitle">{cart.quantity} Quadro{cart.quantity > 1 && 's'}</div>
+                            <div className="ItemValue">R$ {parseFloat(cart.price).toFixed(2)}</div>
                         </SumaryItem>
-                        {cart.quantity > 0 && (
-                            <SumaryItem>
-                                <div className="ItemTitle">Mais {cart.quantity} Quadro{cart.quantity > 1 && 's'}</div>
-                                <div className="ItemValue">R$ {parseFloat(cart.price_unity * cart.quantity).toFixed(2)}</div>
-                            </SumaryItem>
-                        )}
                         <SumaryItem>
                             <div className="ItemTitle">Frete</div>
                             <div className="ItemValue">Grátis</div>
                         </SumaryItem>
                         <Total>
                             <div className="TotalTitle">Total</div>
-                            <div className="TotalValue">R$ {(cart.price_unity * cart.quantity + cart.kit_price).toFixed(2)}</div>
+                            <div className="TotalValue">R$ {(!cart.quantity) ? cart.price.toFixed(2) : (cart.price * cart.quantity).toFixed(2)}</div>
                         </Total>
                     </div>  
                     
@@ -506,7 +500,7 @@ export default function Footer() {
                                 margin="dense"
                                 value={field.numCard}
                                 onChange={handleChange}
-                                name="NumCard"
+                                name="numCard"
                                 label="Numero do cartão"
                                 fullWidth
                             />

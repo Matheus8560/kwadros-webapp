@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+# Frontend Kwadros
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Site de vendas de molduras personalizadas com a foto à gosto do cliente com painel administrativo de gestão dos pedidos. 
 
-## Available Scripts
+O usuário envia as fotos que deseja ter emolduradas, seleciona o tipo da moldura desejada e efetua o pagamento. O pessoal da administração do Moments Frames consegue visualizar todos os pedidos e os status dele no painel administrativo. Além disso, eles conseguem cadastrar novos usuários para terem acesso a esse painel. Caso alguém esqueça a senha consegue recuperá-la facilmente através do email cadastrado. 
 
-In the project directory, you can run:
+## Features
 
-### `yarn start`
+- [x] **Upload de Fotos:** Usuário consegue fazer upload de quantas fotos quiser e removê-las. Ao fazer upload ele tem um preview da foto em miniatura.
+- [x] **Seleção de Molduras:** Listagem de molduras à venda.
+- [x] **Pagamento:** Cartão de Crédito via Pagarme e Boleto Bancário via PagHiper.
+- [ ] **Painel Administrativo** Autenticação e Recuperação de Senha desse Painel; Listagem de Pedidos (Detalhes exibindo as Fotos que Foram enviadas); Crud de Usuários;
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Tecnologias Utilizadas
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- ReactJS
+- MDB Bootstrap
+- Styled Components
+- Redux
+- Redux Saga
+- Hooks
+- Consumo de API's Rest 
+- Axios
+- Variáveis de Ambiente
+- Dropzone (upload de imagens)
+- Tokenização de Cartão via Pagarme
 
-### `yarn test`
+## Guia Rápido de Instalação
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Antes de qualquer coisa, você precisa ter o backend baixado e rodando na sua máquina. Confira o passo a passo [clicando aqui](https://github.com/raissaqueiroz/kwadros-api).
 
-### `yarn build`
+Além disso, você irá precisar de uma conta na pagarme pra poder usar um dos métodos de compra. Acesso o site deles [clicando aqui](https://pagar.me/).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Abra o seu terminal e rode os seguintes comandos:   
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- `git clone https://github.com/raissaqueiroz/kwadros-webapp.git` 
+- `cd kwadros-webapp` 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Dentro da pasta `kwadros-webapp` abra o arquivo `.env` cole a chave de encriptação da pagarme que você gerou na etapa anterior. Ficará assim: 
 
-### `yarn eject`
+```
+REACT_APP_API=http://localhost:3333
+REACT_APP_PAGARME_ENCRYPTION_KEY=SUA_CHAVE_AQUI
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Ainda no seu terminal, rode os comandos abaixo:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `yarn` 
+- `yarn build` 
+- `yarn start` or `yarn dev`  
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Prontinho! Para visualizar o projeto basta acessa o link `http://localhost:3000` no navegador de sua preferência.

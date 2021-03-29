@@ -15,6 +15,11 @@ import Upload from './components/Upload';
 import FileList from './components/FileList';
 import PhotoFramesMenu from './components/PhotoFramesMenu';
 
+import classic from './assets/Frames/classic.png';
+import bold from './assets/Frames/bold.png';
+import ever from './assets/Frames/ever.png';
+import clean from './assets/Frames/clean.png';
+
 import api from './services/api';
 
 export default function App(){
@@ -23,24 +28,40 @@ export default function App(){
     const loading = useSelector(state => state.cart.loading);
 
     const [uploadFiles, setUploadFiles] = useState([]);
-    const [frames, setFrames] = useState([]);
 
     useEffect(() => {
-        loadFrames();
+        dispatch(addProductToCartRequest(frames[0]));
         dispatch(addLoadingCart(false));
         
     }, []);
 
-    async function loadFrames(){
-        try {
-            const response = await api.get('/frames');
-
-            setFrames(response.data);
-            dispatch(addProductToCartRequest(response.data[0]));
-        } catch(err){
-            console.log('algo de errado não deu certo')
-        }
-    }
+    // Molduras
+    const frames = [
+        {
+            id: 1,
+            name: 'Classic',
+            image: classic,
+            price: 49.99
+        },
+        {
+            id: 2,
+            name: 'Bold',
+            image: bold,
+            price: 29.99
+        },
+        {
+            id: 3,
+            name: 'Ever',
+            image: ever,
+            price: 49.99
+        },
+        {
+            id: 4,
+            name: 'Clean',
+            image: clean,
+            price: 29.99
+        },
+    ]
 
     // Carrega fotos do banco*****
     async function loadUploadFiles(){
@@ -84,20 +105,11 @@ export default function App(){
         }));
 
         setUploadFiles(uploadFiles.concat(data));
-        
-        if(uploadFiles.concat(data).length > cart.kit_quantity){
-           const quantity = uploadFiles.concat(data).length - cart.kit_quantity;
 
-           dispatch(addProductToCartRequest({
-               ...cart,
-               quantity
-           }))
-        } else {
-            dispatch(addProductToCartRequest({
-                ...cart,
-                quantity: 0
-            }))
-        }
+        dispatch(addProductToCartRequest({
+            ...cart,
+            quantity: uploadFiles.concat(data).length
+        }))
 
         // Salva no redu
         dispatch(addUploadToCart(data))

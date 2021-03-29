@@ -8,32 +8,32 @@ import { Container, Content } from './styles';
 import HeaderAdm from '../../components/HeaderAdm';
 import Loader from '../../components/Loader';
 
-
-import API from '../../services/api';
+import api from '../../services/api';
 
 export default function Home({ history }){
     const [loading, setLoading] = useState(true);
 
     // DEFININDO COLUNAS
-    const [ columns, setColumns ] = useState([
+    const columns = [
         {
-            key: "name",
-            text: "Nome",
+            key: "order_id",
+            text: "ID do Pedido",
             className: "name",
             align: "left",
             sortable: true, 
         },
         {
-            key: "email",
-            text: "E-mail",
-            className: "email",
+            key: "frame",
+            text: "Moldura",
+            className: "frame",
             align: "left",
-            sortable: true
+            sortable: true, 
         },
         {
-            key: "phone",
-            text: "Telefone",
-            className: "phone",
+            key: "status",
+            text: "status",
+            className: "status",
+            align: "left",
             sortable: true
         },
         {
@@ -51,14 +51,7 @@ export default function Home({ history }){
                             onClick={() => detailsRecord(record)}
                             style={{marginRight: '5px'}}>
                                 
-                            <FaRegEye style={{color: '#FFF'}} />
-                        </button>
-                        <button
-                            className="btn btn-warning"
-                            onClick={() => editRecord(record)}
-                            style={{marginRight: '5px'}}>
-                                
-                            <FaPencilAlt style={{color: '#FFF'}} />
+                            <FaRegEye style={{color: '#FFF'}} /> Baixar
                         </button>
                         <button 
                             className="btn btn-danger" 
@@ -69,9 +62,9 @@ export default function Home({ history }){
                 );
             }
         }
-    ]);
+    ];
 
-    const [config, setConfig] = useState({
+    const config = [{
         page_size: 5,
         length_menu: [ 5, 10, 15, 20 ],
         button: {
@@ -83,47 +76,48 @@ export default function Home({ history }){
         show_first: false,
         show_last: false,
         show_info: false
-    });
-
-    const [extraButtons, setExtraButtons] = useState([
-        {
-            className:"btn btn-primary",
-            title:"Adicionar Novo",
-            children:[
-                <span>
-                    <FaPlus /> Cadastrar Novo
-                </span>
-            ],
-            onClick:(event)=>{
-                history.push('/register');
-            },
-        },
-    ])
+    }];
 
     const [records, setRecords] = useState([]);
 
     useEffect(() => {
-        loadClients();
+        loadUploads();
         setTimeout(() => setLoading(false), 100)
     }, []);
 
-    async function loadClients(){
-        console.log('top')
+    async function loadUploads(){
+        try {
+            const response = await api.get('/uploads');
+
+            let newArr = [];
+            response.data.map(upload => {
+                let indexUp = newArr.findIndex(index => index.order_id === upload.order_id);
+                if(indexUp >= 0 ){
+                    newArr.push({
+                        id: upload._id,
+                        order_id: upload.order_id,
+                        frame: upload.frame,
+                        status: upload.status,
+                    })
+                }
+            })
+
+            setRecords(newArr);
+        }catch (err){
+            console.log('Algo de errado não deu certo')
+        }
     }
 
-    const editRecord = record => {
-        history.push(`/edit/${record._id}`)
-    }
     const detailsRecord = record => {
-        history.push(`/details/${record._id}`)
+        console.log('baixar aqui')
     }
 
     const deleteRecord = async record => {
         setLoading(true);
         try {
-            await API.delete(`/clients/${record._id}`);
+            await api.delete(`/uploads/${record._id}`);
 
-            loadClients();
+            loadUploads();
             
             // Notifications('success', 'Cliente Deletado com Sucesso!');
             
@@ -142,8 +136,13 @@ export default function Home({ history }){
         <Container>
             <HeaderAdm />
             <Content>
-
-
+                <article>
+                    <ReactDatatable
+                        config={config}
+                        records={records}
+                        columns={columns}
+                    />
+                </article>
             </Content>
             <GlobalStyle />
         </Container>
