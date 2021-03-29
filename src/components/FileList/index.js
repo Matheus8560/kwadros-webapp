@@ -21,10 +21,10 @@ export default function FileList({ files, onDelete, frame }){
                         <div style={{position: 'relative'}}>
                             <Preview>
                                 <PreviewImg>
-                                    <Img type={cart.name == 'Moldura Classic' || cart.name === 'Moldura Ever' ? 'active' : 'default'} src={index.preview}/>
+                                    <Img type={cart.name == 'Classic' || cart.name === 'Ever' ? 'active' : 'default'} src={index.preview}/>
                                 </PreviewImg>
                                 <Frame>
-                                    <img src={cart.name == 'Moldura Classic' || cart.name === 'Moldura Bold' ? bordaBold : bordaClean}/>
+                                    <img src={cart.name == 'Classic' || cart.name === 'Bold' ? bordaBold : bordaClean}/>
                                 </Frame>
                             </Preview>
                         </div>

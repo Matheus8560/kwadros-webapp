@@ -25,6 +25,13 @@ O usuário envia as fotos que deseja ter emolduradas, seleciona o tipo da moldur
 - Dropzone (upload de imagens)
 - Tokenização de Cartão via Pagarme
 
+## Preview do Projeto
+
+<p align="center">
+  <img src="https://github.com/raissaqueiroz/kwadros-webapp/blob/master/screeshots/tela_1.png" width=400 height=200/>
+  <img src="https://github.com/raissaqueiroz/kwadros-webapp/blob/master/screeshots/tela_2.png" width=400 height=200/>
+</p>
+
 ## Guia Rápido de Instalação
 
 Antes de qualquer coisa, você precisa ter o backend baixado e rodando na sua máquina. Confira o passo a passo [clicando aqui](https://github.com/raissaqueiroz/kwadros-api).
