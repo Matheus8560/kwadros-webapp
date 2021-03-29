@@ -28,8 +28,8 @@ O usuário envia as fotos que deseja ter emolduradas, seleciona o tipo da moldur
 ## Preview do Projeto
 
 <p align="center">
-  <img src="https://github.com/raissaqueiroz/kwadros-webapp/blob/master/screeshots/tela_1.png" width=400 height=200/>
-  <img src="https://github.com/raissaqueiroz/kwadros-webapp/blob/master/screeshots/tela_2.png" width=400 height=200/>
+  <img src="https://github.com/raissaqueiroz/kwadros-webapp/blob/master/screenshots/tela_1.png" width=400 height=200/>
+  <img src="https://github.com/raissaqueiroz/kwadros-webapp/blob/master/screenshots/tela_2.png" width=400 height=200/>
 </p>
 
 ## Guia Rápido de Instalação
